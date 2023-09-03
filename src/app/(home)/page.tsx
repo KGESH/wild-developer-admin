@@ -5,6 +5,8 @@ import { redirect } from 'next/navigation';
 import LogoutButton from '@/app/(home)/logout-button';
 import GeoLocationForm from '@/app/(home)/geo-location-form';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   // Todo: extract
   const supabase = createServerComponentClient<Database>({ cookies });

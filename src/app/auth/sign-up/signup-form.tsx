@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 import SignUpButton from '@/app/auth/sign-up/signup-button';
 import { FormEvent } from 'react';
 
+export const dynamic = 'force-dynamic';
+
 export default function SignupForm() {
   const router = useRouter();
 
