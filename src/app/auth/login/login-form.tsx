@@ -1,15 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import LoginButton from '@/app/auth/login/login-button';
 import { useRouter } from 'next/navigation';
-import { FormEvent, FormEventHandler } from 'react';
+import { FormEvent, FormEventHandler, useState } from 'react';
 
 export default function LoginForm() {
   const router = useRouter();
+  const [pending, setPending] = useState(false);
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setPending(true);
+
     const formData = new FormData(e.currentTarget as HTMLFormElement);
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
@@ -25,6 +27,7 @@ export default function LoginForm() {
     if (user) {
       router.refresh();
       router.push('/');
+      setPending(false);
     }
   };
 
@@ -33,7 +36,9 @@ export default function LoginForm() {
       <form onSubmit={onSubmit}>
         <input type="email" name="email" />
         <input type="password" name="password" />
-        <LoginButton />
+        <button type="submit" disabled={pending}>
+          {pending ? 'Loading...' : 'Login'}
+        </button>
       </form>
       <Link href="/auth/sign-up">Create account</Link>
     </>

@@ -1,16 +1,18 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import SignUpButton from '@/app/auth/sign-up/signup-button';
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
 
 export const dynamic = 'force-dynamic';
 
 export default function SignupForm() {
   const router = useRouter();
+  const [pending, setPending] = useState(false);
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setPending(true);
+
     const formData = new FormData(e.currentTarget as HTMLFormElement);
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
@@ -25,13 +27,18 @@ export default function SignupForm() {
 
     console.log(`Signup client response: `, response);
 
-    if (response) router.push('/auth/login');
+    if (response) {
+      setPending(false);
+      router.push('/auth/login');
+    }
   };
   return (
     <form onSubmit={onSubmit}>
       <input type="email" name="email" />
       <input type="password" name="password" />
-      <SignUpButton />
+      <button type="submit" disabled={pending}>
+        {pending ? 'Loading...' : 'Sign up'}
+      </button>
     </form>
   );
 }
