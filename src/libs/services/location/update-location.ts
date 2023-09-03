@@ -1,0 +1,11 @@
+import { createClient } from '@supabase/supabase-js';
+import { Location } from './location.types';
+
+export async function createLocation(location: Location) {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string,
+  );
+
+  return await supabase.from('locations').insert(location);
+}
