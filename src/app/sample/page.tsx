@@ -1,4 +1,4 @@
-export default function SamplePage() {
+export default function Sample() {
   return (
     <section>
       <h1>sample page</h1>
