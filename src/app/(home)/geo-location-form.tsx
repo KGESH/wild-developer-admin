@@ -17,22 +17,26 @@ export default function GeoLocationForm() {
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget as HTMLFormElement);
+    // Todo: validate
     const lat = formData.get('lat') as string;
     const lng = formData.get('lng') as string;
 
     const location: Location = { lat: +lat, lng: +lng };
-    const response = await fetch('/api/location', {
+    await updateLocation(location);
+  };
+
+  const updateLocation = async (location: Location) => {
+    const { success } = await fetch('/api/location', {
       method: 'POST',
       body: JSON.stringify(location),
       headers: { 'Content-Type': 'application/json' },
     }).then((res) => res.json());
 
-    console.log(`Client location response: `, response);
+    if (success) alert('Location saved successfully');
   };
 
   useEffect(() => {
     if (clientLocation) {
-      console.log(`My location: `, clientLocation);
       setLat(`${clientLocation.lat}`);
       setLng(`${clientLocation.lng}`);
     }
