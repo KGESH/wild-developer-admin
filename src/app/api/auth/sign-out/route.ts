@@ -6,6 +6,7 @@ import { cookies } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
 
+// Todo: extract to client component
 export async function POST(request: NextRequest) {
   console.log(`Call signOut()`);
   const supabase = createRouteHandlerClient<Database>(
