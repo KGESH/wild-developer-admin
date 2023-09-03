@@ -1,24 +1,27 @@
+'use client';
+
 import { Location } from '@/libs/services/location/location.types';
-import { createLocation } from '@/libs/services/location/update-location';
-
-async function updateGeoLocation(formData: FormData) {
-  'use server';
-  const lat = formData.get('lat') as string;
-  const lng = formData.get('lng') as string;
-
-  const location: Location = { lat: +lat, lng: +lng };
-  const response = await createLocation(location);
-  if (response.error) {
-    console.log(`update error: `, response.error);
-    return;
-  }
-
-  console.log(`update result: `, response);
-}
+import { FormEvent } from 'react';
 
 export default function GeoLocationForm() {
+  const onSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
+    const lat = formData.get('lat') as string;
+    const lng = formData.get('lng') as string;
+
+    const location: Location = { lat: +lat, lng: +lng };
+    const response = await fetch('/api/location', {
+      method: 'POST',
+      body: JSON.stringify(location),
+      headers: { 'Content-Type': 'application/json' },
+    }).then((res) => res.json());
+
+    console.log(`Client location response: `, response);
+  };
+
   return (
-    <form action={updateGeoLocation} className="flex flex-col items-center">
+    <form onSubmit={onSubmit} className="flex flex-col items-center">
       <label htmlFor="lat">Latitude</label>
       <input type="text" name="lat" placeholder="123.123123" className="placeholder:text-center" />
 

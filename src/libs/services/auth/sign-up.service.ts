@@ -6,7 +6,6 @@ import { cookies } from 'next/headers';
 
 type SignUpProps = User;
 export async function signUp({ email, password }: SignUpProps) {
-  'use server';
   const supabase = createSupabaseConnection();
 
   return await supabase.auth.signUp({

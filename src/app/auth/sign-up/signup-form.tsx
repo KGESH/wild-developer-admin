@@ -1,21 +1,32 @@
-import { signUp } from '@/libs/services/auth/sign-up.service';
-import { redirect } from 'next/navigation';
+'use client';
+
+import { useRouter } from 'next/navigation';
 import SignUpButton from '@/app/auth/sign-up/signup-button';
-
-async function onSubmit(formData: FormData) {
-  'use server';
-
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
-  await signUp({ email, password });
-
-  // Todo: redirect to email verification page
-  redirect('/auth/login');
-}
+import { FormEvent } from 'react';
 
 export default function SignupForm() {
+  const router = useRouter();
+
+  const onSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    console.log(`Signup form data: `, { email, password });
+
+    const response = await fetch('/api/auth/sign-up', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+      headers: { 'Content-Type': 'application/json' },
+    }).then((res) => res.json());
+
+    console.log(`Signup client response: `, response);
+
+    if (response) router.push('/auth/login');
+  };
   return (
-    <form action={onSubmit}>
+    <form onSubmit={onSubmit}>
       <input type="email" name="email" />
       <input type="password" name="password" />
       <SignUpButton />
